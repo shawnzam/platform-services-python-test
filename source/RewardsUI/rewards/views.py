@@ -1,10 +1,7 @@
 import logging
 import requests
-
 from django.template.response import TemplateResponse
 from django.views.generic.base import TemplateView
-from django.views.generic.base import View
-from django.http import HttpResponse
 
 
 class RewardsView(TemplateView):
