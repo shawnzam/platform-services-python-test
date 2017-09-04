@@ -7,6 +7,11 @@
 
 <body>
 	<div class="container">
+		{% if errors %}
+		<div class="alert alert-warning">
+			<strong>Warning!</strong> {{errors}}
+		</div>
+		{% endif %}
 		<h1>Welcome to the Rewards Dashboard</h1>
 		<div>
 			<h2>Reward Tiers</h2>
@@ -43,7 +48,7 @@
 			<form action="/rewards/" method="post">
 				{% csrf_token %}
 				<label>Email address: </label>
-				<input name="email_lookup" type="text" />
+				<input required name="email_lookup" type="text" value={{email_lookup}} />
 				<button class="btn btn-primary">Search</button>
 			</form>
 			<table class="table table-striped">

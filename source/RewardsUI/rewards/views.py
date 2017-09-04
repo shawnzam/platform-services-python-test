@@ -17,7 +17,6 @@ class RewardsView(TemplateView):
         context['rewards_data'] = response.json()
         response = requests.get("http://rewardsservice:7050/endpoint3")
         context['user_data'] = response.json()
-
         return TemplateResponse(
             request,
             self.template_name,
@@ -29,13 +28,19 @@ class RewardsView(TemplateView):
         if('email' in request.POST and 'cost' in request.POST):
             response = requests.post("http://rewardsservice:7050/endpoint1", data={
                 'email': request.POST['email'], 'cost': request.POST['cost']})
+            if 'errors' in response.json():
+                context['errors'] = ",".join(response.json()['errors'])
             response = requests.get("http://rewardsservice:7050/endpoint3")
             context['user_data'] = response.json()
 
         if('email_lookup' in request.POST):
+            context['email_lookup'] = request.POST['email_lookup']
             response = requests.get(
                 "http://rewardsservice:7050/endpoint2?email={}".format(request.POST['email_lookup']))
-            context['user_data'] = response.json()
+            if 'errors' in response.json():
+                context['errors'] = ",".join(response.json()['errors'])
+            else:
+                context['user_data'] = response.json()
         response = requests.get("http://rewardsservice:7050/rewards")
         context['rewards_data'] = response.json()
 
