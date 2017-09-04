@@ -17,9 +17,12 @@ class Endpoint2Handler(tornado.web.RequestHandler):
         errors = []
         if not EmailValidator.valid_email(email):
             errors.append('missing or invalid email')
-        customer = db.Customers.find_one({'email': email}, {'_id': 0})
+        customer = db.Customers.find_one({'Email Address': email}, {'_id': 0})
         if customer:
-            self.write(customer)
+            # make list
+            clist = []
+            clist.append(customer)
+            self.write(json.dumps(clist))
         else:
             errors.append('User not found')
         if errors:

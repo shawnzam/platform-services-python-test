@@ -49,18 +49,17 @@ class Endpoint1Handler(tornado.web.RequestHandler):
         if not customer:
             customer_current_points = math.floor(cost)
             db.Customers.insert(
-                {'Email Address': email, 'customer_current_points': math.floor(cost)})
+                {'Email Address': email, 'Reward Points': math.floor(cost)})
         else:
             customer_current_points = customer[
-                'customer_current_points'] + math.floor(cost)
+                'Reward Points'] + math.floor(cost)
         tier = self.find_tier(customer_current_points, rewards, 100)
         next_tier = self.find_tier(customer_current_points, rewards, 0)
         x = db.Customers.update({'Email Address': email}, {
             'Email Address': email,
-            'customer_current_points': customer_current_points,
             'Rewards Tier': tier['tier'],
             'Reward Tier Name': tier['rewardName'],
-            'Reward Points': tier['points'],
+            'Reward Points': customer_current_points,
             'Next Rewards Tier': next_tier['tier'],
             'Next Rewards Tier Name': next_tier['rewardName'],
             'Next Rewards Tier Progress': self.calc_progress(tier['points'], next_tier['points'], customer_current_points)})
