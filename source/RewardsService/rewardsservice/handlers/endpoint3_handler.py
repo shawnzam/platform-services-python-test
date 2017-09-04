@@ -19,3 +19,7 @@ class Endpoint3Handler(tornado.web.RequestHandler):
             self.write(json.dumps(customers))
         else:
             errors.append('User not found')
+        if errors:
+            self.set_status(500)
+            self.write(json.dumps({'errors': errors}))
+            return None
