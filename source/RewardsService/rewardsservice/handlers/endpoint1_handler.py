@@ -44,19 +44,19 @@ class Endpoint1Handler(tornado.web.RequestHandler):
             self.set_status(500)
             self.write(json.dumps({'errors': errors}))
             return None
-        customer = db.Customers.find_one({'email': email}, {'_id': 0})
+        customer = db.Customers.find_one({'Email Address': email}, {'_id': 0})
         customer_current_points = 0
         if not customer:
             customer_current_points = math.floor(cost)
             db.Customers.insert(
-                {'email': email, 'customer_current_points': math.floor(cost)})
+                {'Email Address': email, 'customer_current_points': math.floor(cost)})
         else:
             customer_current_points = customer[
                 'customer_current_points'] + math.floor(cost)
         tier = self.find_tier(customer_current_points, rewards, 100)
         next_tier = self.find_tier(customer_current_points, rewards, 0)
-        x = db.Customers.update({'email': email}, {
-            'email': email,
+        x = db.Customers.update({'Email Address': email}, {
+            'Email Address': email,
             'customer_current_points': customer_current_points,
             'Rewards Tier': tier['tier'],
             'Reward Tier Name': tier['rewardName'],
@@ -64,5 +64,5 @@ class Endpoint1Handler(tornado.web.RequestHandler):
             'Next Rewards Tier': next_tier['tier'],
             'Next Rewards Tier Name': next_tier['rewardName'],
             'Next Rewards Tier Progress': self.calc_progress(tier['points'], next_tier['points'], customer_current_points)})
-        customer = db.Customers.find_one({'email': email}, {'_id': 0})
+        customer = db.Customers.find_one({'Email Address': email}, {'_id': 0})
         self.write(customer)
